@@ -10,8 +10,8 @@ import { GlobalStoreContext } from '../store'
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const [ editActive, setEditActive ] = useState(false);
-    const [ text, setText ] = useState("");
+    const [editActive, setEditActive] = useState(false);
+    const [text, setText] = useState("");
     store.history = useHistory();
     const { idNamePair, selected } = props;
 
@@ -34,7 +34,7 @@ function ListCard(props) {
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            store.setIsListNameEditActive();
+            store.setlistNameActive();
         }
         setEditActive(newActive);
     }
@@ -47,7 +47,7 @@ function ListCard(props) {
         }
     }
     function handleUpdateText(event) {
-        setText(event.target.value );
+        setText(event.target.value);
     }
 
     let selectClass = "unselected-list-card";

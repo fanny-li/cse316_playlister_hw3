@@ -24,11 +24,13 @@ const api = axios.create({
 export const getAllPlaylists = () => api.get(`/playlists`)
 export const getPlaylistPairs = () => api.get('playlistpairs')
 export const getPlaylistById = (id) => api.get(`/playlist/${id}`)
+export const addNewPlaylist = (payload) => api.post('/playlist', payload)
 
 const apis = {
     getAllPlaylists,
     getPlaylistPairs,
     getPlaylistById,
+    addNewPlaylist
 }
 
 export default apis

@@ -36,6 +36,8 @@ export const useGlobalStore = () => {
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
     // HANDLE EVERY TYPE OF STATE CHANGE
+    // A reducer is a function that returns the next state of app
+    // payload is a term used for the property that holds the actual data in an object
     const storeReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
@@ -186,7 +188,7 @@ export const useGlobalStore = () => {
         }
         asyncSetCurrentList(id);
     }
-    store.getPlaylistSize = function() {
+    store.getPlaylistSize = function () {
         return store.currentList.songs.length;
     }
     store.undo = function () {
@@ -202,6 +204,27 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    // this function creates a new list
+    store.createNewList = function () {
+        async function createNewList() {
+            let response = await api.getAllPlaylists();
+            if (response.data.success) {
+                let newlist = {
+                    "name": "Untitled",
+                    "songs": [],
+                };
+                async function postList(newlist) {
+                    response = await api.addNewPlaylist(newlist);
+                    if (response.data.success) {
+                        store.loadIdNamePairs();
+                    }
+                }
+                postList(newlist);
+            }
+        }
+        createNewList();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
