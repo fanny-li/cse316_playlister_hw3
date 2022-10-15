@@ -31,7 +31,8 @@ export const useGlobalStore = () => {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false
+        listNameActive: false,
+        listToDelete: null
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -83,7 +84,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    listToDelete: payload
                 });
             }
             // UPDATE A LIST
@@ -225,6 +227,39 @@ export const useGlobalStore = () => {
             }
         }
         createNewList();
+    }
+
+    // this function deletes a list
+    store.markListForDeletion = function (id) {
+        async function markListForDeletion(id) {
+            let response = await api.getPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                storeReducer({
+                    type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload: playlist
+                })
+            }
+        }
+        markListForDeletion(id);
+    }
+
+    store.confirmDeleteList = function () {
+        async function confirmDeleteList() {
+            let response = await api.getPlaylistPairs();
+            if (response.data.success) {
+                let playlist = store.listToDelete;
+                async function deleteList(id) {
+                    response = await api.deletePlaylistById(id);
+                    console.log(response);
+                    if (response.data.success) {
+                        store.loadIdNamePairs();
+                    }
+                }
+                deleteList(playlist._id)
+            }
+        }
+        confirmDeleteList();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

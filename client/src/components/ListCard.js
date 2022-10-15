@@ -1,6 +1,7 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
+import DeleteListModal from './DeleteListModal.js';
 /*
     This is a card in our list of playlists. It lets select
     a list for editing and it has controls for changing its 
@@ -14,6 +15,7 @@ function ListCard(props) {
     const [text, setText] = useState("");
     store.history = useHistory();
     const { idNamePair, selected } = props;
+    const [modalActive, setModalActive] = useState(false);
 
     function handleLoadList(event) {
         if (!event.target.disabled) {
@@ -50,6 +52,15 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
+    function handleDeleteList(event) {
+        event.stopPropagation();
+        let newActive = !modalActive;
+        if (newActive) {
+            store.markListForDeletion(idNamePair._id);
+        }
+        setModalActive(newActive);
+    }
+
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -75,6 +86,7 @@ function ListCard(props) {
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
+                onClick={handleDeleteList}
                 value={"\u2715"}
             />
             <input
@@ -85,7 +97,9 @@ function ListCard(props) {
                 onClick={handleToggleEdit}
                 value={"\u270E"}
             />
+            <DeleteListModal />
         </div>;
+
 
     if (editActive) {
         cardElement =
@@ -98,6 +112,11 @@ function ListCard(props) {
                 defaultValue={idNamePair.name}
             />;
     }
+
+    if (modalActive) {
+        document.getElementById("delete-list-modal").classList.add("is-visible");
+    }
+
     return (
         cardElement
     );
