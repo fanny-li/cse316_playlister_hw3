@@ -251,7 +251,6 @@ export const useGlobalStore = () => {
                 let playlist = store.listToDelete;
                 async function deleteList(id) {
                     response = await api.deletePlaylistById(id);
-                    console.log(response);
                     if (response.data.success) {
                         store.loadIdNamePairs();
                     }
@@ -262,6 +261,24 @@ export const useGlobalStore = () => {
         confirmDeleteList();
     }
 
+    // this function adds a song to the currentlist
+    store.addSongToList = function (playlist) {
+        async function addSongToList(playlist) {
+            let response = await api.getPlaylistById(playlist._id); // just so we know the playlist exists
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                async function addSong(id) {
+                    response = await api.addSong(id)
+                    if (response.data.success) {
+                        console.log("Success");
+                        store.loadIdNamePairs();
+                    }
+                }
+                addSong(playlist._id)
+            }
+        }
+        addSongToList(playlist);
+    }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }
