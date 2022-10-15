@@ -23,7 +23,8 @@ function EditToolbar() {
         history.push("/");
         store.closeCurrentList();
     }
-    function handleAddSong() {
+    function handleAddSong(event) {
+        event.stopPropagation();
         store.addSongToList(store.currentList);
     }
     let editStatus = false;

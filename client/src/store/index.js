@@ -18,6 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -32,7 +33,9 @@ export const useGlobalStore = () => {
         currentList: null,
         newListCounter: 0,
         listNameActive: false,
-        listToDelete: null
+        listToDelete: null,
+        songToDelete: null,
+        songIndex: 0
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -104,6 +107,18 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listNameActive: true
+                });
+            }
+
+            // PREPARE TO DELETE A SONG
+            case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    songToDelete: payload.song,
+                    songIndex: payload.index
                 });
             }
             default:
@@ -263,21 +278,67 @@ export const useGlobalStore = () => {
 
     // this function adds a song to the currentlist
     store.addSongToList = function (playlist) {
-        async function addSongToList(playlist) {
-            let response = await api.getPlaylistById(playlist._id); // just so we know the playlist exists
+        async function addSong(id) {
+            let response = await api.addSong(id);
             if (response.data.success) {
                 let playlist = response.data.playlist;
-                async function addSong(id) {
-                    response = await api.addSong(id)
-                    if (response.data.success) {
-                        console.log("Success");
-                        store.loadIdNamePairs();
-                    }
-                }
-                addSong(playlist._id)
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                });
+                store.history.push("/playlist/" + playlist._id);
             }
         }
-        addSongToList(playlist);
+        addSong(playlist._id)
+
+    }
+
+    // this function deletes a song from the current playlist
+    store.markSongForDeletion = function (playlist, song, index) {
+        async function markSongForDeletion(playlist, song, index) {
+            let payload = {
+                playlist: playlist,
+                song: song,
+                index: index
+            }
+            storeReducer({
+                type: GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+                payload: {
+                    playlist: payload.playlist,
+                    song: payload.song,
+                    index: payload.index
+                }
+            })
+
+            store.history.push("/playlist/" + playlist._id);
+        }
+        markSongForDeletion(playlist, song, index);
+    }
+
+    store.confirmDeleteSong = function (playlist, song, index) {
+        async function confirmDeleteSong(playlist, song, index) {
+            let updatedSongs = [...playlist.songs];
+
+            if (index >= 0) {
+                updatedSongs.splice(index, 1);
+            }
+
+            playlist.songs = [...updatedSongs];
+            console.log(playlist);
+
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                })
+
+                store.history.push("/playlist/" + playlist._id);
+            }
+        }
+        confirmDeleteSong(playlist, song, index);
     }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

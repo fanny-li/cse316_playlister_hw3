@@ -105,6 +105,7 @@ updatePlaylistById = async (req, res) => {
         }
 
         list.name = body.name;
+        list.songs = body.songs;
 
         list
             .save()
@@ -164,6 +165,7 @@ addSong = async (req, res) => {
             .then(() => {
                 return res.status(201).json({
                     success: true,
+                    playlist: playlist,
                     message: "Song Added!"
                 })
             }).catch(err => {
@@ -174,6 +176,7 @@ addSong = async (req, res) => {
             })
     })
 }
+
 
 module.exports = {
     createPlaylist,
