@@ -2,6 +2,7 @@ import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS.js'
 import api from '../api'
 import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js';
+import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -299,7 +300,7 @@ export const useGlobalStore = () => {
     }
 
     // this function adds a song to the currentlist
-    store.addSongToList = function (playlist) {
+    store.addSongToList = function (playlist, index) {
         async function addSong(id) {
             let response = await api.addSong(id);
             if (response.data.success) {
@@ -311,7 +312,7 @@ export const useGlobalStore = () => {
                 store.history.push("/playlist/" + playlist._id);
             }
         }
-        addSong(playlist._id)
+        addSong(playlist._id, index)
 
     }
 
@@ -337,8 +338,8 @@ export const useGlobalStore = () => {
         markSong(playlist, song, index);
     }
 
-    store.confirmDeleteSong = function (playlist, song, index) {
-        async function confirmDeleteSong(playlist, song, index) {
+    store.confirmDeleteSong = function (playlist, index) {
+        async function confirmDeleteSong(playlist, index) {
             let updatedSongs = [...playlist.songs];
 
             if (index >= 0) {
@@ -346,7 +347,6 @@ export const useGlobalStore = () => {
             }
 
             playlist.songs = [...updatedSongs];
-            console.log(playlist);
 
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
@@ -360,7 +360,7 @@ export const useGlobalStore = () => {
                 store.history.push("/playlist/" + playlist._id);
             }
         }
-        confirmDeleteSong(playlist, song, index);
+        confirmDeleteSong(playlist, index);
     }
 
     // this function edits the song
@@ -375,7 +375,6 @@ export const useGlobalStore = () => {
             }
 
             playlist.songs = [...updatedSongs];
-            console.log(playlist);
 
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
@@ -434,6 +433,10 @@ export const useGlobalStore = () => {
         tps.addTransaction(transaction);
     }
 
+    store.addAddSongTransaction = function (playlist, index) {
+        let transaction = new AddSong_Transaction(this, playlist, index);
+        tps.addTransaction(transaction);
+    }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }
