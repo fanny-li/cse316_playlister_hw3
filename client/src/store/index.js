@@ -34,7 +34,7 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         listToDelete: null,
-        songToDelete: null,
+        songClicked: null,
         songIndex: 0
     });
 
@@ -91,6 +91,15 @@ export const useGlobalStore = () => {
                     listToDelete: payload
                 });
             }
+
+            case GlobalStoreActionType.DELETE_SELECTED_LIST: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: null,
+                    newListCounter: store.newListCounter - 1,
+                    listNameActive: false
+                })
+            }
             // UPDATE A LIST
             case GlobalStoreActionType.SET_CURRENT_LIST: {
                 return setStore({
@@ -117,7 +126,7 @@ export const useGlobalStore = () => {
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    songToDelete: payload.song,
+                    songClicked: payload.song,
                     songIndex: payload.index
                 });
             }
@@ -235,6 +244,12 @@ export const useGlobalStore = () => {
                 async function postList(newlist) {
                     response = await api.addNewPlaylist(newlist);
                     if (response.data.success) {
+                        let playlist = response.data.playlist;
+
+                        storeReducer({
+                            type: GlobalStoreActionType.CREATE_NEW_LIST,
+                            payload: playlist
+                        })
                         store.loadIdNamePairs();
                     }
                 }
@@ -268,6 +283,11 @@ export const useGlobalStore = () => {
                     response = await api.deletePlaylistById(id);
                     if (response.data.success) {
                         store.loadIdNamePairs();
+
+                        storeReducer({
+                            type: GlobalStoreActionType.DELETE_SELECTED_LIST,
+                            payload: {}
+                        })
                     }
                 }
                 deleteList(playlist._id)

@@ -115,6 +115,7 @@ function ListCard(props) {
 
     if (modalActive) {
         document.getElementById("delete-list-modal").classList.add("is-visible");
+        setModalActive(!modalActive);
     }
 
     return (

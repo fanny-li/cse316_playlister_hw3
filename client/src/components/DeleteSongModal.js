@@ -4,12 +4,12 @@ import { GlobalStoreContext } from '../store';
 const DeleteSongModal = () => {
     const { store } = useContext(GlobalStoreContext);
     let name = "";
-    if (store.songToDelete) {
-        name = store.songToDelete.title;
+    if (store.songClicked) {
+        name = store.songClicked.title;
     }
     function confirmDeleteSong(event) {
         event.stopPropagation();
-        store.confirmDeleteSong(store.currentList, store.songToDelete, store.songIndex);
+        store.confirmDeleteSong(store.currentList, store.songClicked, store.songIndex);
         document.getElementById("delete-song-modal").classList.remove("is-visible");
     }
     function cancelDeleteSong(event) {

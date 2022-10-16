@@ -5,7 +5,7 @@ import DeleteSongModal from './DeleteSongModal';
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [deleteModalActive, setDeleteModalActive] = useState(false);
-
+    const [editModalActive, setEditModalActive] = useState(false);
     const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
 
@@ -18,6 +18,13 @@ function SongCard(props) {
         setDeleteModalActive(newActive);
     }
 
+    function handleClick(event) {
+        event.stopPropagation();
+        if (event.detail == 2) {
+            let newActive = !editModalActive;
+            setEditModalActive(newActive);
+        }
+    }
     if (deleteModalActive) {
         document.getElementById("delete-song-modal").classList.add("is-visible");
         setDeleteModalActive(!deleteModalActive);
@@ -27,6 +34,7 @@ function SongCard(props) {
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
+            onClick={handleClick}
         >
             {index + 1}.
             <a

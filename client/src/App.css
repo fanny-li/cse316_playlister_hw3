@@ -1,4 +1,8 @@
+@import url('https://fonts.googleapis.com/css?family=Tangerine');
+@import url('https://fonts.googleapis.com/css?family=Lexend+Exa');
+
 :root {
+
   /* 
         FIRST WE'LL DEFINE OUR SWATCHES, i.e. THE COMPLEMENTARY
         COLORS THAT WE'LL USE TOGETHER IN MULTIPLE PLACES THAT
@@ -77,6 +81,10 @@ body {
 
 #playlist-selector-heading {
   font-size: 20pt;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 10pt;
 }
 
 .playlister-button,
