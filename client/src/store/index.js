@@ -390,6 +390,42 @@ export const useGlobalStore = () => {
         }
         editSong(playlist, title, artist, youTubeId, index);
     }
+
+    // this function moves the song
+    store.moveSong = function (playlist, start, end) {
+        async function moveSong(playlist, start, end) {
+            if (start < end) {
+                let temp = playlist.songs[start];
+
+                for (let i = +(start); i < end; i++) {
+                    playlist.songs[i] = playlist.songs[i + 1];
+                }
+                playlist.songs[end] = temp;
+            }
+            else if (start > end) {
+                let temp = playlist.songs[start];
+                for (let i = +(start); i > end; i--) {
+                    playlist.songs[i] = playlist.songs[i - 1];
+                }
+                playlist.songs[end] = temp;
+            }
+
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                })
+
+                store.history.push("/playlist/" + playlist._id);
+            }
+        }
+
+        moveSong(playlist, start, end);
+
+    }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }

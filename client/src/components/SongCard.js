@@ -8,6 +8,11 @@ function SongCard(props) {
     const [deleteModalActive, setDeleteModalActive] = useState(false);
     const [editModalActive, setEditModalActive] = useState(false);
     const { song, index } = props;
+    const [drag, setDrag] = useState({
+        "isDragging": false,
+        "draggedTo": false
+    })
+
     let cardClass = "list-card unselected-list-card";
 
     function handleDeleteSong(event) {
@@ -30,6 +35,49 @@ function SongCard(props) {
         }
     }
 
+    function handleDragStart(event) {
+        event.dataTransfer.setData("song", event.target.id); // chosen song
+        setDrag({
+            "isDragging": true,
+            "draggedTo": drag.draggedTo
+        })
+    }
+    function handleDragOver(event) {
+        event.preventDefault();
+        setDrag({
+            "isDragging": drag.isDragging,
+            "draggedTo": true
+        })
+    }
+    function handleDragEnter(event) {
+        event.preventDefault();
+        setDrag({
+            "isDragging": drag.isDragging,
+            "draggedTo": true
+        })
+    }
+    function handleDragLeave(event) {
+        event.preventDefault();
+        setDrag({
+            "isDragging": drag.isDragging,
+            "draggedTo": false
+        })
+    }
+    function handleDrop(event) {
+        event.preventDefault();
+        let target = event.target;
+        let targetId = (event.target.id).substring(target.id.indexOf("-") + 1, target.id.indexOf("-") + 2);
+
+        let sourceId = event.dataTransfer.getData("song"); // gets the stored data from when stored
+        sourceId = sourceId.substring(sourceId.indexOf("-") + 1, sourceId.indexOf("-") + 2);
+
+        setDrag({
+            "isDragging": false,
+            "draggedTo": false
+        })
+
+        store.moveSong(store.currentList, sourceId, targetId);
+    }
     if (deleteModalActive) {
         document.getElementById("delete-song-modal").classList.add("is-visible");
         setDeleteModalActive(!deleteModalActive);
@@ -44,6 +92,12 @@ function SongCard(props) {
             id={'song-' + index + '-card'}
             className={cardClass}
             onClick={handleClick}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            draggable="true"
         >
             {index + 1}.
             <a
