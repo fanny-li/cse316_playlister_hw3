@@ -8,12 +8,6 @@ const EditSongModal = () => {
     const artistRef = useRef('');
     const youTubeIdRef = useRef('');
 
-    // const [newSong, setSong] = useState({
-    //     "title": titleRef.current.value,
-    //     "artist": artistRef.current.value,
-    //     "youTubeId": youTubeIdRef.current.value
-    // })
-
     if (store.songClicked) {
         titleRef.current.value = store.songClicked.title;
         artistRef.current.value = store.songClicked.artist;
@@ -21,7 +15,12 @@ const EditSongModal = () => {
     }
     function confirmEditSong(event) {
         event.stopPropagation();
-        store.editSong(store.currentList, titleRef.current.value, artistRef.current.value, youTubeIdRef.current.value, store.songIndex);
+        let newSong = {
+            "title": titleRef.current.value,
+            "artist": artistRef.current.value,
+            "youTubeId": youTubeIdRef.current.value
+        }
+        store.addEditSongTransaction(store.currentList, store.songClicked, newSong, store.songIndex);
         document.getElementById("edit-song-modal").classList.remove("is-visible");
     }
     function cancelEditSong(event) {

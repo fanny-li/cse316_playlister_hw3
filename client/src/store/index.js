@@ -4,6 +4,7 @@ import api from '../api'
 import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js';
 import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
 import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction.js';
+import EditSong_Transaction from '../transactions/EditSong_Transaction.js';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -304,11 +305,7 @@ export const useGlobalStore = () => {
     store.addSongToList = function (playlist, song, index) {
         async function addSongToList(playlist, song, index) {
             let newSongs = [...playlist.songs];
-            newSongs[index] = {
-                "title": song.title,
-                "artist": song.artist,
-                "youTubeId": song.youTubeId
-            }
+            newSongs.push(song);
             playlist.songs = newSongs;
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
@@ -374,14 +371,14 @@ export const useGlobalStore = () => {
     }
 
     // this function edits the song
-    store.editSong = function (playlist, title, artist, youTubeId, index) {
-        async function editSong(playlist, title, artist, youTubeId, index) {
+    store.editSong = function (playlist, song, index) {
+        async function editSong(playlist, song, index) {
             let updatedSongs = [...playlist.songs];
 
             updatedSongs[index] = {
-                "title": title,
-                "artist": artist,
-                "youTubeId": youTubeId
+                "title": song.title,
+                "artist": song.artist,
+                "youTubeId": song.youTubeId
             }
 
             playlist.songs = [...updatedSongs];
@@ -398,7 +395,7 @@ export const useGlobalStore = () => {
                 store.history.push("/playlist/" + playlist._id);
             }
         }
-        editSong(playlist, title, artist, youTubeId, index);
+        editSong(playlist, song, index);
     }
 
     // this function moves the song
@@ -419,7 +416,7 @@ export const useGlobalStore = () => {
                 }
                 playlist.songs[end] = temp;
             }
-
+            console.log(playlist);
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
                 let playlist = response.data.playlist;
@@ -450,6 +447,11 @@ export const useGlobalStore = () => {
 
     store.addDeleteSongTransaction = function (playlist, song, index) {
         let transaction = new DeleteSong_Transaction(this, playlist, song, index);
+        tps.addTransaction(transaction);
+    }
+
+    store.addEditSongTransaction = function (playlist, oldSong, newSong, index) {
+        let transaction = new EditSong_Transaction(this, playlist, oldSong, newSong, index);
         tps.addTransaction(transaction);
     }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

@@ -9,7 +9,6 @@ const DeleteSongModal = () => {
     }
     function confirmDeleteSong(event) {
         event.stopPropagation();
-        // store.confirmDeleteSong(store.currentList, store.songIndex);
         store.addDeleteSongTransaction(store.currentList, store.songClicked, store.songIndex);
         document.getElementById("delete-song-modal").classList.remove("is-visible");
     }
