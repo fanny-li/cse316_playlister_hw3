@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 import DeleteSongModal from './DeleteSongModal';
+import EditSongModal from './EditSongModal';
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
@@ -13,7 +14,7 @@ function SongCard(props) {
         event.stopPropagation();
         let newActive = !deleteModalActive;
         if (newActive) {
-            store.markSongForDeletion(store.currentList, song, index);
+            store.markSong(store.currentList, song, index);
         }
         setDeleteModalActive(newActive);
     }
@@ -22,12 +23,20 @@ function SongCard(props) {
         event.stopPropagation();
         if (event.detail == 2) {
             let newActive = !editModalActive;
+            if (newActive) {
+                store.markSong(store.currentList, song, index);
+            }
             setEditModalActive(newActive);
         }
     }
+
     if (deleteModalActive) {
         document.getElementById("delete-song-modal").classList.add("is-visible");
         setDeleteModalActive(!deleteModalActive);
+    }
+    if (editModalActive) {
+        document.getElementById("edit-song-modal").classList.add("is-visible");
+        setEditModalActive(!editModalActive);
     }
     return (
         <div
@@ -51,6 +60,7 @@ function SongCard(props) {
                 value={"\u2715"}
             />
             <DeleteSongModal />
+            <EditSongModal />
         </div>
     );
 }

@@ -18,7 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
+    MARK_SONG: "MARK_SONG"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -119,8 +119,8 @@ export const useGlobalStore = () => {
                 });
             }
 
-            // PREPARE TO DELETE A SONG
-            case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+            // MARK SONG
+            case GlobalStoreActionType.MARK_SONG: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
                     currentList: payload.playlist,
@@ -130,6 +130,7 @@ export const useGlobalStore = () => {
                     songIndex: payload.index
                 });
             }
+
             default:
                 return store;
         }
@@ -314,15 +315,15 @@ export const useGlobalStore = () => {
     }
 
     // this function deletes a song from the current playlist
-    store.markSongForDeletion = function (playlist, song, index) {
-        async function markSongForDeletion(playlist, song, index) {
+    store.markSong = function (playlist, song, index) {
+        async function markSong(playlist, song, index) {
             let payload = {
                 playlist: playlist,
                 song: song,
                 index: index
             }
             storeReducer({
-                type: GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+                type: GlobalStoreActionType.MARK_SONG,
                 payload: {
                     playlist: payload.playlist,
                     song: payload.song,
@@ -332,7 +333,7 @@ export const useGlobalStore = () => {
 
             store.history.push("/playlist/" + playlist._id);
         }
-        markSongForDeletion(playlist, song, index);
+        markSong(playlist, song, index);
     }
 
     store.confirmDeleteSong = function (playlist, song, index) {
@@ -359,6 +360,35 @@ export const useGlobalStore = () => {
             }
         }
         confirmDeleteSong(playlist, song, index);
+    }
+
+    // this function edits the song
+    store.editSong = function (playlist, title, artist, youTubeId, index) {
+        async function editSong(playlist, title, artist, youTubeId, index) {
+            let updatedSongs = [...playlist.songs];
+
+            updatedSongs[index] = {
+                "title": title,
+                "artist": artist,
+                "youTubeId": youTubeId
+            }
+
+            playlist.songs = [...updatedSongs];
+            console.log(playlist);
+
+            let response = await api.updatePlaylistById(playlist._id, playlist);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: playlist
+                })
+
+                store.history.push("/playlist/" + playlist._id);
+            }
+        }
+        editSong(playlist, title, artist, youTubeId, index);
     }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

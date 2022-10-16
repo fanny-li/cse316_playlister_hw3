@@ -216,16 +216,17 @@ input {
   padding: 1rem;
 }
 
-.modal-header,
+/* .modal-header,
 .modal-footer {
   background: var(--lightgray);
-}
+} */
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: dotted;
+  background-color: var(--swatch-accent);
 }
 
 .modal-center {
@@ -234,6 +235,13 @@ input {
   grid-template-rows: 33% 33% 33%;
   gap: 10px 20px;
   font-size: 35pt;
+}
+
+.modal-footer {
+  background-color: lightgray;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .modal-center-content {
@@ -261,6 +269,25 @@ input {
 
 .modal-button {
   font-size: 20pt;
+  margin: 0 10pt;
+}
+
+.modal-center-edit-song {
+  display: grid;
+  font-size: 35px;
+  grid-template-columns: 30% 70%;
+}
+
+.edit-song-attributes {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.edit-song-attributes input {
+  align-self: center;
+  width: 80%;
+  height: 24px;
 }
 
 #close-modal-button {
