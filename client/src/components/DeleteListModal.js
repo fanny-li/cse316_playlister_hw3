@@ -15,6 +15,7 @@ const DeleteListModal = () => {
     }
     function cancelDeleteList(event) {
         event.stopPropagation();
+        store.cancelDeleteList()
         document.getElementById("delete-list-modal").classList.remove("is-visible");
     }
     return (

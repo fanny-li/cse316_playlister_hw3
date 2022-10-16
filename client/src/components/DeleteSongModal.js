@@ -14,6 +14,7 @@ const DeleteSongModal = () => {
     }
     function cancelDeleteSong(event) {
         event.stopPropagation();
+        store.cancelDeleteSong();
         document.getElementById("delete-song-modal").classList.remove("is-visible");
     }
     return (

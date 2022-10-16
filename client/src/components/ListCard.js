@@ -45,9 +45,14 @@ function ListCard(props) {
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            if (text === "") {
+                toggleEdit();
+            }
+            else {
+                let id = event.target.id.substring("list-".length);
+                store.changeListName(id, text);
+                toggleEdit();
+            }
         }
     }
     function handleUpdateText(event) {
@@ -67,9 +72,12 @@ function ListCard(props) {
     if (selected) {
         selectClass = "selected-list-card";
     }
+
     let cardStatus = false;
-    if (store.isListNameEditActive) {
-        cardStatus = true;
+
+    if (modalActive) {
+        document.getElementById("delete-list-modal").classList.add("is-visible");
+        setModalActive(!modalActive);
     }
     let cardElement =
         <div
@@ -115,10 +123,11 @@ function ListCard(props) {
             />;
     }
 
-    if (modalActive) {
-        document.getElementById("delete-list-modal").classList.add("is-visible");
-        setModalActive(!modalActive);
-    }
+    // if (modalActive) {
+    //     document.getElementById("delete-list-modal").classList.add("is-visible");
+    //     cardStatus = true;
+    //     // setModalActive(!modalActive);
+    // }
 
     return (
         cardElement

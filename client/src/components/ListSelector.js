@@ -28,15 +28,23 @@ const ListSelector = () => {
             />
         ))
     }
+
+    let editStatus = false;
+    let buttonClass = "playlister-button";
+    if (store.modalActive) {
+        editStatus = true;
+        buttonClass = "playlister-button-disabled";
+    }
     return (
         <div id="playlist-selector">
             <div id="list-selector-list">
                 <div id="playlist-selector-heading">
                     <input
+                        disabled={editStatus}
                         type="button"
                         id="add-list-button"
                         onClick={handleCreateNewList}
-                        className="playlister-button"
+                        className={buttonClass}
                         value="+" />
                     Your Lists
                 </div>                {

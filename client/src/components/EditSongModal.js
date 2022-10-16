@@ -25,6 +25,7 @@ const EditSongModal = () => {
     }
     function cancelEditSong(event) {
         event.stopPropagation();
+        store.cancelEditSong();
         document.getElementById("edit-song-modal").classList.remove("is-visible");
     }
 
