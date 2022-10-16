@@ -1,6 +1,6 @@
 import { jsTPS_Transaction } from "../common/jsTPS.js";
 
-export default class AddSong_Transaction extends jsTPS_Transaction {
+export default class DeleteSong_Transaction extends jsTPS_Transaction {
     constructor(initStore, initPlaylist, initSong, initIndex) {
         super();
         this.store = initStore;
@@ -10,10 +10,10 @@ export default class AddSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.store.addSongToList(this.playlist, this.song, this.index);
+        this.store.confirmDeleteSong(this.playlist, this.index);
     }
 
     undoTransaction() {
-        this.store.confirmDeleteSong(this.playlist, this.index);
+        this.store.addSongToList(this.playlist, this.song, this.index);
     }
 }

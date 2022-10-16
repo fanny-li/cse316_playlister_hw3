@@ -25,7 +25,13 @@ function EditToolbar() {
     }
     function handleAddSong(event) {
         event.stopPropagation();
-        store.addAddSongTransaction(store.currentList, store.getPlaylistSize());
+        let song = {
+            "title": "Untitled",
+            "artist": "Unknown",
+            "youTubeId": "dQw4w9WgXcQ"
+        }
+        let index = store.currentList.songs.length;
+        store.addAddSongTransaction(store.currentList, song, index);
     }
     let editStatus = false;
     if (store.listNameActive) {

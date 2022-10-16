@@ -139,51 +139,11 @@ deletePlaylistById = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
-addSong = async (req, res) => {
-    await Playlist.findOne({ _id: req.params.id }, (err, playlist) => {
-        if (err) {
-            return res.status(400).json({
-                success: false,
-                error: err
-            })
-        }
-
-        let newSongs = [...playlist.songs];
-        let song = {
-            "title": "Untitled",
-            "artist": "Unknown",
-            "youTubeId": "dQw4w9WgXcQ"
-        }
-
-        newSongs.push(song);
-        console.log(newSongs);
-
-        playlist.songs = newSongs;
-
-        playlist
-            .save()
-            .then(() => {
-                return res.status(201).json({
-                    success: true,
-                    playlist: playlist,
-                    message: "Song Added!"
-                })
-            }).catch(err => {
-                return res.status(400).json({
-                    err,
-                    message: "Song Not Added!"
-                })
-            })
-    })
-}
-
-
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById,
     updatePlaylistById,
-    deletePlaylistById,
-    addSong
+    deletePlaylistById
 }
