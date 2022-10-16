@@ -28,9 +28,10 @@ function EditToolbar() {
         store.addSongToList(store.currentList);
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    if (store.listNameActive) {
         editStatus = true;
     }
+
     return (
         <span id="edit-toolbar">
             <input

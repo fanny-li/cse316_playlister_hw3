@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react'
-import jsTPS from '../common/jsTPS'
+import jsTPS from '../common/jsTPS.js'
 import api from '../api'
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -426,6 +427,13 @@ export const useGlobalStore = () => {
         moveSong(playlist, start, end);
 
     }
+
+    // TRANSACTIONS
+    store.addMoveSongTransaction = function (playlist, start, end) {
+        let transaction = new MoveSong_Transaction(this, playlist, start, end);
+        tps.addTransaction(transaction);
+    }
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }

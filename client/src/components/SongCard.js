@@ -76,7 +76,7 @@ function SongCard(props) {
             "draggedTo": false
         })
 
-        store.moveSong(store.currentList, sourceId, targetId);
+        store.addMoveSongTransaction(store.currentList, sourceId, targetId);
     }
     if (deleteModalActive) {
         document.getElementById("delete-song-modal").classList.add("is-visible");

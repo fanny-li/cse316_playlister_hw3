@@ -25,6 +25,8 @@ function ListCard(props) {
 
             // CHANGE THE CURRENT LIST
             store.setCurrentList(_id);
+            store.setlistNameActive();
+            console.log(store.listNameActive);
         }
     }
 
