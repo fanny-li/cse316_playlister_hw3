@@ -11,10 +11,12 @@ import PlaylistCards from './PlaylistCards'
     
     @author McKilla Gorilla
 */
-export {    Banner, 
-            EditToolbar, 
-            ListCard, 
-            ListSelector, 
-            SongCard,
-            Statusbar, 
-            PlaylistCards }
+export {
+    Banner,
+    EditToolbar,
+    ListCard,
+    ListSelector,
+    SongCard,
+    Statusbar,
+    PlaylistCards
+}

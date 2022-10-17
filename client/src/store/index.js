@@ -23,7 +23,9 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_SONG: "MARK_SONG",
-    MODAL_ACTIVE: "MODAL_ACTIVE"
+    MODAL_ACTIVE: "MODAL_ACTIVE",
+    SET_UNDO_TRANSACTION: "SET_UNDO_TRANSACTION",
+    SET_REDO_TRANSACTION: "SET_REDO_TRANSACTION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -41,7 +43,9 @@ export const useGlobalStore = () => {
         listToDelete: null,
         songClicked: null,
         songIndex: 0,
-        modalActive: false
+        modalActive: false,
+        undoTransaction: false,
+        redoTransaction: false
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -149,6 +153,26 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: store.listNameActive,
                     modalActive: false
+                });
+            }
+
+            case GlobalStoreActionType.SET_UNDO_TRANSACTION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: store.listNameActive,
+                    undoTransaction: true
+                });
+            }
+
+            case GlobalStoreActionType.SET_REDO_TRANSACTION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: store.listNameActive,
+                    redoTransaction: true
                 })
             }
             default:
@@ -199,6 +223,7 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        tps.clearAllTransactions();
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -458,7 +483,6 @@ export const useGlobalStore = () => {
                 playlist.songs[end] = temp;
             }
             let response = await api.updatePlaylistById(playlist._id, playlist);
-            console.log(response.data.message);
             if (response.data.success) {
 
                 storeReducer({
@@ -473,6 +497,13 @@ export const useGlobalStore = () => {
         moveSong(playlist, start, end);
     }
 
+    store.hasUndoTransaction = function () {
+        return tps.hasTransactionToUndo();
+    }
+
+    store.hasRedoTransaction = function () {
+        return tps.hasTransactionToRedo();
+    }
     // TRANSACTIONS
     store.addMoveSongTransaction = function (playlist, start, end) {
         let transaction = new MoveSong_Transaction(this, playlist, start, end);
