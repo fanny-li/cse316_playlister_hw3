@@ -338,7 +338,7 @@ export const useGlobalStore = () => {
             playlist.songs = newSongs;
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
-                let playlist = response.data.playlist;
+                // let playlist = response.data.playlist;
 
                 storeReducer({
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
@@ -386,7 +386,6 @@ export const useGlobalStore = () => {
 
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
-                let playlist = response.data.playlist;
 
                 storeReducer({
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
@@ -421,7 +420,6 @@ export const useGlobalStore = () => {
 
             let response = await api.updatePlaylistById(playlist._id, playlist);
             if (response.data.success) {
-                let playlist = response.data.playlist;
 
                 storeReducer({
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
@@ -459,10 +457,9 @@ export const useGlobalStore = () => {
                 }
                 playlist.songs[end] = temp;
             }
-            console.log(playlist);
             let response = await api.updatePlaylistById(playlist._id, playlist);
+            console.log(response.data.message);
             if (response.data.success) {
-                let playlist = response.data.playlist;
 
                 storeReducer({
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
@@ -474,7 +471,6 @@ export const useGlobalStore = () => {
         }
 
         moveSong(playlist, start, end);
-
     }
 
     // TRANSACTIONS

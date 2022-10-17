@@ -36,8 +36,6 @@ function EditToolbar() {
         let index = store.currentList.songs.length;
         store.addAddSongTransaction(store.currentList, song, index);
     }
-    let tps = new jsTPS();
-
     let editStatus = false;
     let undoStatus = false;
     let redoStatus = false;
@@ -47,16 +45,16 @@ function EditToolbar() {
         undoStatus = true;
         redoStatus = true;
         buttonClass = "playlister-button-disabled";
-        undoButtonClass = "playlister-button-disabled";
-        redoButtonClass = "playlister-button-disabled";
+        // undoButtonClass = "playlister-button-disabled";
+        // redoButtonClass = "playlister-button-disabled";
     }
     else if (store.listNameActive) {
         editStatus = true;
         undoStatus = true;
         redoStatus = true;
         buttonClass = "playlister-button-disabled";
-        undoButtonClass = "playlister-button-disabled";
-        redoButtonClass = "playlister-button-disabled";
+        // undoButtonClass = "playlister-button-disabled";
+        // redoButtonClass = "playlister-button-disabled";
     }
     else if (store.modalActive) {
         editStatus = true;
@@ -67,16 +65,16 @@ function EditToolbar() {
         redoButtonClass = "playlister-button-disabled";
     }
     else if (store.currentList) {
-        undoStatus = true;
-        redoStatus = true;
-        undoButtonClass = "playlister-button-disabled";
-        redoButtonClass = "playlister-button-disabled";
+        // undoStatus = true;
+        // redoStatus = true;
+        // undoButtonClass = "playlister-button-disabled";
+        // redoButtonClass = "playlister-button-disabled";
 
-        if (tps.hasTransactionToUndo()) {
-            console.log("undo");
-            undoStatus = false;
-            undoButtonClass = "playlister-button";
-        }
+        // if (tps.hasTransactionToUndo()) {
+        //     console.log("undo");
+        //     undoStatus = false;
+        //     undoButtonClass = "playlister-button";
+        // }
     }
     return (
         <span id="edit-toolbar">

@@ -89,39 +89,19 @@ getPlaylistPairs = async (req, res) => {
 updatePlaylistById = async (req, res) => {
 
     const body = req.body;
-    console.log("Update Playlist body: " + body);
+    console.log("Update Playlist body: " + JSON.stringify(body));
 
-    if (!body) {
-        return res.status(400).json({
-            success: false,
-            error: 'You must provide a Playlist',
-        })
-    }
-
-
-    await Playlist.findOne({ _id: req.params.id }, (err, list) => {
+    await Playlist.replaceOne({ _id: req.params.id }, { ...body }, (err) => {
         if (err) {
-            return res.status(400).json({ success: false, error: err });
-        }
-
-        list.name = body.name;
-        list.songs = body.songs;
-
-        list
-            .save()
-            .then(() => {
-                return res.status(201).json({
-                    success: true,
-                    playlist: list,
-                    message: 'Playlist Updated!',
-                })
-            }).catch(err => {
-                return res.status(400).json({
-                    err,
-                    message: 'Playlist Not Updated!'
-                })
+            return res.status(400).json({
+                success: false,
+                error: err
             })
-    })
+        }
+        return res.status(200).json({
+            success: true
+        })
+    }).catch(err => console.log(err))
 }
 
 deletePlaylistById = async (req, res) => {
