@@ -524,6 +524,8 @@ export const useGlobalStore = () => {
         let transaction = new EditSong_Transaction(this, playlist, oldSong, newSong, index);
         tps.addTransaction(transaction);
     }
+
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }

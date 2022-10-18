@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 import { useHistory } from 'react-router-dom'
-import jsTPS from '../common/jsTPS.js';
 /*
     This toolbar is a functional React component that
     manages the undo/redo/close buttons.
