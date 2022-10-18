@@ -87,32 +87,36 @@ function SongCard(props) {
         setEditModalActive(!editModalActive);
     }
     return (
-        <div
-            key={index}
-            id={'song-' + index + '-card'}
-            className={cardClass}
-            onClick={handleClick}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            draggable="true"
-        >
-            {index + 1}.
-            <a
-                id={'song-' + index + '-link'}
-                className="song-link"
-                href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
-                {song.title} by {song.artist}
-            </a>
-            <input
-                type="button"
-                id={"remove-song-" + index}
-                className="list-card-button"
-                onClick={handleDeleteSong}
-                value={"\u2715"}
-            />
+        <div>
+            <div
+                key={index}
+                id={'song-' + index + '-card'}
+                className={cardClass}
+                onClick={handleClick}
+                onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                draggable="true"
+            >
+                {index + 1}.
+                <a
+                    id={'song-' + index + '-link'}
+                    className="song-link"
+                    href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
+                    {song.title} by {song.artist}
+                </a>
+                <input
+                    type="button"
+                    id={"remove-song-" + index}
+                    className="list-card-button"
+                    onClick={handleDeleteSong}
+                    value={"\u2715"}
+                />
+                {/* <DeleteSongModal />
+            <EditSongModal /> */}
+            </div>
             <DeleteSongModal />
             <EditSongModal />
         </div>
