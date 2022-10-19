@@ -24,7 +24,7 @@ const DeleteSongModal = () => {
             data-animation="slideInOutLeft">
             <div className="modal-dialog" id='verify-delete-song-root'>
                 <div className="modal-header">
-                    Delete playlist?
+                    Remove Song?
                 </div>
                 <div className="modal-center">
                     <div className="modal-center-content">
